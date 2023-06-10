@@ -4,7 +4,7 @@ resource "aws_iam_user" "testuser" {
 
 }
 
-resource "aws_iam_access_key" "testuser" {
+resource "aws_iam_access_key" "keyuser" {
   user = aws_iam_user.testuser.name
 }
 
