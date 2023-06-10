@@ -4,6 +4,10 @@ resource "aws_iam_user" "testuser" {
 
 }
 
+resource "aws_iam_user_login_profile" "profile" {
+  user    = aws_iam_user.testuser.name
+}
+
 resource "aws_iam_access_key" "keyuser" {
   user = aws_iam_user.testuser.name
 }
