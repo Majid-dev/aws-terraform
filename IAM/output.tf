@@ -1,6 +1,6 @@
 
 output "aws_iam_user_secret" {
-  value = aws_iam_access_key.keyuser.secret
+  value     = aws_iam_access_key.access_key.secret
   sensitive = true
 }
 

@@ -1,17 +1,21 @@
 variable "iam_user_name" {
-  default = "test-user"
+  default = "opt-user"
 }
 
 variable "iam_group_name" {
-  default = "test-group"
+  default = "operation-group"
 }
 
 variable "iam_user_policy_name" {
-  default = "test_policy"
+  default = "user_policy"
 }
 
 variable "iam_group_membership" {
-  default = "tf-testing-group-membership"
+  default = "group-membership"
+}
+
+variable "iam_group_policy_name" {
+  default = "group_policy"
 }
 
 variable "aws_access_key" {}
