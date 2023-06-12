@@ -25,6 +25,7 @@ resource "aws_instance" "web" {
   user_data              = file(var.entry_script_file)
   vpc_security_group_ids = [aws_security_group.allow_http_ssh.id]
   key_name               = aws_key_pair.ssh_key.key_name
+  placement_group        = aws_placement_group.web.id
   # root disk
   root_block_device {
     volume_size           = "8"
@@ -78,4 +79,9 @@ resource "aws_security_group" "allow_http_ssh" {
   tags = {
     Name = "allow_http_ssh"
   }
+}
+
+resource "aws_placement_group" "web" {
+  name     = "test-pg"
+  strategy = "spread"
 }
