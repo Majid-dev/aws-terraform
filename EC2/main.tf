@@ -15,16 +15,16 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_key_pair" "ssh_key" {
-  key_name = "ssh_key"
-  public_key = file("id_rsa.pub")
+  key_name   = "ssh_key"
+  public_key = file(var.public_key_file)
 }
 
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
-  user_data     = file("entryscript.sh")
-  vpc_security_group_ids = [ aws_security_group.allow_http_ssh.id ]
-  key_name = aws_key_pair.ssh_key.key_name
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = var.instance_type
+  user_data              = file(var.entry_script_file)
+  vpc_security_group_ids = [aws_security_group.allow_http_ssh.id]
+  key_name               = aws_key_pair.ssh_key.key_name
   # root disk
   root_block_device {
     volume_size           = "8"
@@ -55,24 +55,24 @@ resource "aws_security_group" "allow_http_ssh" {
     description = "http from VPC"
     from_port   = 80
     to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = var.gp_protocol
+    cidr_blocks = [var.cidr_blocks]
   }
 
   ingress {
     description = "ssh from VPC"
     from_port   = 22
     to_port     = 22
-    protocol    = "tcp"
-    
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = var.gp_protocol
+
+    cidr_blocks = [var.cidr_blocks]
   }
 
-   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.cidr_blocks]
   }
 
   tags = {
