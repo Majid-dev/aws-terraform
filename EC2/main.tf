@@ -26,6 +26,7 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.allow_http_ssh.id]
   key_name               = aws_key_pair.ssh_key.key_name
   placement_group        = aws_placement_group.web.id
+  
   # root disk
   root_block_device {
     volume_size           = "8"
@@ -46,6 +47,13 @@ resource "aws_default_vpc" "default" {
   }
 }
 
+resource "aws_default_subnet" "default_az1" {
+  availability_zone = var.default_az
+
+  tags = {
+    Name = "Default subnet for us-east-1a"
+  }
+}
 
 resource "aws_security_group" "allow_http_ssh" {
   name        = "allow_http_ssh"
@@ -84,4 +92,15 @@ resource "aws_security_group" "allow_http_ssh" {
 resource "aws_placement_group" "web" {
   name     = "test-pg"
   strategy = "spread"
+}
+
+resource "aws_network_interface" "test" {
+  subnet_id       = aws_default_subnet.default_az1.id
+  private_ips     = ["172.31.80.20"]
+  security_groups = [aws_security_group.allow_http_ssh.id]
+
+  attachment {
+    instance     = aws_instance.web.id
+    device_index = 1
+  }
 }
