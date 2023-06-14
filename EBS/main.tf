@@ -34,3 +34,16 @@ resource "aws_volume_attachment" "ebs_att" {
   volume_id   = aws_ebs_volume.my_vol.id
   instance_id = aws_instance.web.id
 }
+
+resource "aws_ebs_snapshot" "test_snapshot" {
+  volume_id = aws_ebs_volume.my_vol.id
+
+  tags = {
+    Name = "test_snapshot"
+  }
+}
+
+resource "aws_ebs_volume" "restored_vol" {
+  availability_zone = "us-east-1a"
+  snapshot_id       = aws_ebs_snapshot.test_snapshot.id
+}
