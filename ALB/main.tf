@@ -98,7 +98,7 @@ resource "aws_lb" "alb" {
   security_groups    = [aws_security_group.sg_lb.id]
   subnets            = [aws_default_subnet.sub_az_1a.id, aws_default_subnet.sub_az_1b.id]
 
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 
   tags = {
     Environment = "production"
