@@ -112,14 +112,52 @@ resource "aws_lb_listener" "listener" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.target_group.arn
+    target_group_arn = aws_lb_target_group.target_group_1.arn
   }
 }
 
-resource "aws_lb_target_group" "target_group" {
-  name        = "lb-tg"
+
+resource "aws_lb_listener_rule" "listener_rul_1" {
+  listener_arn = aws_lb_listener.listener.arn
+  priority     = 101
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group_2.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/test"]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "listener_rul_2" {
+  listener_arn = aws_lb_listener.listener.arn
+  priority     = 102
+
+  action {
+    type             = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Constant error response"
+      status_code  = "404"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = ["/constant"]
+    }
+  }
+}
+
+resource "aws_lb_target_group" "target_group_1" {
+  name        = "lb-tg-1"
   port        = 80
   protocol    = "HTTP"
+  protocol_version = "HTTP1"
   target_type = "instance"
   vpc_id      = aws_default_vpc.default.id
 
@@ -133,9 +171,33 @@ resource "aws_lb_target_group" "target_group" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "test" {
-  for_each         = toset(var.instance_list)
-  target_group_arn = aws_lb_target_group.target_group.arn
+resource "aws_lb_target_group" "target_group_2" {
+  name        = "lb-tg-2"
+  port        = 80
+  protocol    = "HTTP"
+  protocol_version = "HTTP1"
+  target_type = "instance"
+  vpc_id      = aws_default_vpc.default.id
+
+  health_check {
+    path                = "/"
+    port                = 80
+    protocol            = "HTTP"
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    matcher             = "200-499"
+  }
+}
+
+resource "aws_lb_target_group_attachment" "tg_attach_1" {
+  for_each         = toset(slice(var.instance_list, 0,2))
+  target_group_arn = aws_lb_target_group.target_group_1.arn
   target_id        = aws_instance.web[each.value].id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "tg_attach_2" {
+  target_group_arn = aws_lb_target_group.target_group_2.arn
+  target_id        = aws_instance.web[var.instance_list[2]].id
   port             = 80
 }
