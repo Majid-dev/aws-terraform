@@ -19,5 +19,11 @@ resource "aws_launch_template" "template" {
   image_id      = data.aws_ami.demo_ami.id
   instance_type = var.instance_type
   user_data = filebase64(var.user_data_file)
-  vpc_security_group_ids = var.vpc_security_group_ids
+  #vpc_security_group_ids = var.vpc_security_group_ids
+
+  network_interfaces {
+    subnet_id = var.subnet_id
+    security_groups = var.vpc_security_group_ids
+  }
+ 
 }
