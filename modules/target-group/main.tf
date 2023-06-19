@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "target_group" {
-  name        = "lb-tg-1"
+  name        = "${var.project_name}-tg"
   port        = var.tg_port
   protocol    = var.tg_protocol
   protocol_version = "HTTP1"

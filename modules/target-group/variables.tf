@@ -1,3 +1,4 @@
+variable "project_name" {}
 variable "vpc_id" {}
 variable "health_check_path" {}
 variable "tg_port" {}
