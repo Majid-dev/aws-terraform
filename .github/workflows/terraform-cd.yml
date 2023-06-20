@@ -16,6 +16,7 @@ jobs:
 
       - name: Deployment
         run: |
+          terraform login
           terraform init
           terraform apply -auto-approve
 
