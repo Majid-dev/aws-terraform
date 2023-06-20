@@ -11,7 +11,7 @@ env:
 
 jobs:
   terraform:
-    if: github.repository == 'Majid-dev/aws-terraform'
+    if: github.repository != 'Majid-dev/aws-terraform'
     name: "Terraform Plan"
     runs-on: ubuntu-latest
     permissions:
