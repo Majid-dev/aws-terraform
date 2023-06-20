@@ -5,7 +5,7 @@ terraform {
     hostname = "app.terraform.io"
 
     workspaces {
-      name = "aws-terraform"
+      name = "aws-terraform-API-driven"
     }
   }
 }
