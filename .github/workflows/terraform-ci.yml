@@ -1,0 +1,44 @@
+name: Terraform CI
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code  
+      uses: actions/checkout@v1
+
+    - name: Run a Terraform init  
+      uses: docker://hashicorp/terraform:0.12.11
+      with:
+        entrypoint: terraform
+        args: init
+
+    - name: Run a Terraform validate    
+      uses: docker://hashicorp/terraform:0.12.11
+      with:
+        entrypoint: terraform
+        args: validate
+   - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Get dependencies
+      run: |
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        else
+          go get -v -t -d ./...  
+        fi
+
+    - name: Test
+      working-directory: /home/runner/work/terratest-demo/terratest-demo/test
+      run: go test
