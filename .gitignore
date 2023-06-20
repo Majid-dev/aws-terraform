@@ -31,6 +31,6 @@ override.tf.json
 # example: *tfplan*
 
 # Ignore CLI configuration files
-.terraformrc
+terraform.rc
 EC2/test_rsa.pub
 */secrets
