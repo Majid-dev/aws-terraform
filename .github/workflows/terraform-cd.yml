@@ -15,7 +15,10 @@ jobs:
         run: echo "Deploying infrastructure an AWS ..."
 
       - name: Deployment
-        run: terraform apply -auto-approve
+        run: |
+          terraform init,
+          terraform apply -auto-approve
+
           
       - name: show message
         run: echo "Deployment complete successfully."
