@@ -11,14 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Show message
-        run: echo "Deploying infrastructure an AWS ..."
-
-      - name: Deployment
+      - name: Login to terraform cloud
         run: |
+          cp .terraformrc $HOME
           terraform login
           terraform init
-          terraform apply -auto-approve
+
+      - name: Deployment
+        run: terraform apply -auto-approve
 
           
       - name: show message
