@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name:
+        run: echo $TF_TOKEN_app_terraform_io
+
       - name: Login to terraform cloud
         run: |
           cp .terraformrc $HOME
