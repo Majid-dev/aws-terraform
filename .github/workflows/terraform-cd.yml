@@ -14,10 +14,12 @@ jobs:
       - name:
         run: |
           echo $TF_TOKEN_APP_TERRAFORM_IO
+          echo $HOME
           cat .terraformrc
 
       - name: Login to terraform cloud
-        run: 
+        run: |
+          cp .terraformrc $HOME
           terraform init
 
       - name: Deployment
