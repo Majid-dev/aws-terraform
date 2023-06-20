@@ -12,7 +12,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - name:
-        run: echo $TF_TOKEN_APP_TERRAFORM_IO
+        run: |
+          echo $TF_TOKEN_APP_TERRAFORM_IO
+          cat .terraformrc
 
       - name: Login to terraform cloud
         run: |
