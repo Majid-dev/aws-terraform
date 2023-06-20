@@ -14,7 +14,6 @@ jobs:
       - name: Login to terraform cloud
         run: |
           cp .terraformrc $HOME
-          terraform login
           terraform init
 
       - name: Deployment
