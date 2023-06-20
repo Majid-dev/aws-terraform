@@ -17,8 +17,7 @@ jobs:
           cat .terraformrc
 
       - name: Login to terraform cloud
-        run: |
-          cp .terraformrc $HOME
+        run: 
           terraform init
 
       - name: Deployment
