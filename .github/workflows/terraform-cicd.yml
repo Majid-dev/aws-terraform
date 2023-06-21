@@ -38,6 +38,24 @@ jobs:
     - name: Terraform Format
       run: terraform fmt -check
 
+    - name: Terraform validate
+      run: terraform validate
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Get dependencies
+      run: |
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        else
+          go get -v -t -d ./...  
+        fi
+
     # Generates an execution plan for Terraform
     - name: Terraform Plan
       run: terraform plan -input=false
