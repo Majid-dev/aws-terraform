@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+env:
+  TF_CLOUD_ORGANIZATION: "poorsam"
+  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+  TF_WORKSPACE: "aws-terraform-API-driven"
+  CONFIG_DIRECTORY: "./"
+
 jobs:
   validate:
     name: Validate
@@ -14,17 +20,17 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Run a Terraform init  
-      uses: docker://hashicorp/terraform:0.12.11
+      uses: docker://hashicorp/terraform:latest
       with:
         entrypoint: terraform
         args: init
 
     - name: Run a Terraform validate    
-      uses: docker://hashicorp/terraform:0.12.11
+      uses: docker://hashicorp/terraform:latest
       with:
         entrypoint: terraform
         args: validate
-   - name: Set up Go 1.13
+    - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
         go-version: 1.13
