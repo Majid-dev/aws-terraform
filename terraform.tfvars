@@ -22,6 +22,6 @@ tg_protocol       = "HTTP"
 tg_target_type    = "instance"
 
 #auto scaling group variables
-desired_capacity = 2
-max_size         = 3
-min_size         = 1
+desired_capacity = 0
+max_size         = 0
+min_size         = 0
