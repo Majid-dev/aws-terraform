@@ -25,7 +25,7 @@ module "launch-template" {
   instance_type          = var.instance_type
   user_data_file         = var.user_data_file
   vpc_security_group_ids = [module.security-group.webserver-security-group_id]
-  subnet_id = module.vpc.subnet_az1_id
+  subnet_id              = module.vpc.subnet_az1_id
 }
 
 module "target_group" {
