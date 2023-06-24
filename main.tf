@@ -55,3 +55,17 @@ module "asg" {
   max_size           = var.max_size
   min_size           = var.min_size
 }
+
+module "rds_with_replica" {
+  source = "./modules/rds"
+
+  db_instance_identifier = var.db_instance_identifier
+  db_name                = var.db_name
+  db_username            = var.db_username
+  db_password            = var.db_password
+  allocated_storage      = var.allocated_storage
+  instance_class         = var.instance_class
+  vpc_security_group_ids = [module.security-group.database-security-group_id]
+  subnet_ids             = [module.vpc.subnet_az1_id, module.vpc.subnet_az2_id]
+  create_read_replica    = true # Set this to false if you don't want to create a read replica
+}

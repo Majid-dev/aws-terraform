@@ -28,3 +28,12 @@ variable "tg_target_type" {}
 variable "desired_capacity" {}
 variable "max_size" {}
 variable "min_size" {}
+
+#Relational Database Service variables
+variable "db_instance_identifier" {}
+variable "instance_class" {}
+variable "allocated_storage" {}
+variable "db_name" {}
+variable "db_username" {}
+variable "db_password" {}
+variable "create_read_replica" {}

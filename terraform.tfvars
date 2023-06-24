@@ -25,3 +25,12 @@ tg_target_type    = "instance"
 desired_capacity = 2
 max_size         = 3
 min_size         = 1
+
+#Relational Database Service variables
+db_instance_identifier = "my-rds-instance"
+db_name                = "my_database"
+db_username            = "admin"
+db_password            = "password123"
+allocated_storage      = 20
+instance_class         = "db.t2.micro"
+create_read_replica    = true # Set this to false if you don't want to create a read replica
