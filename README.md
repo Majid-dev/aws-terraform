@@ -1,5 +1,7 @@
 # aws-terraform
 
+![Untitled Diagram drawio](https://github.com/Majid-dev/aws-terraform/assets/43570120/02f43937-37d5-49a0-b02a-7fa43ebdb6fd)
+
 ## Infrastructure (Terraform Code)
 This is an example of modular Terraform code to deploy resources include a VPC (Virtual Private Cloud), an ASG (Auto Scaling Group), and an ALB (Application Load Balancer) along with the existing compute instance resources on AWS using a GitHub Actions pipeline.
 
