@@ -1,10 +1,15 @@
 module "vpc" {
-  source                = "./modules/vpc"
-  region                = var.region
-  vpc_cidr_block        = var.vpc_cidr_block
-  project_name          = var.project_name
-  subnet_az1_cidr_block = var.subnet_az1_cidr_block
-  subnet_az2_cidr_block = var.subnet_az2_cidr_block
+  source                       = "./modules/vpc"
+  region                       = var.region
+  project_name                 = var.project_name
+  environment                  = var.environment
+  vpc_cidr                     = var.vpc_cidr
+  public_subnet_az1_cidr       = var.public_subnet_az1_cidr
+  public_subnet_az2_cidr       = var.public_subnet_az2_cidr
+  private_app_subnet_az1_cidr  = var.private_app_subnet_az1_cidr
+  private_app_subnet_az2_cidr  = var.private_app_subnet_az2_cidr
+  private_data_subnet_az1_cidr = var.private_data_subnet_az1_cidr
+  private_data_subnet_az2_cidr = var.private_data_subnet_az2_cidr
 }
 
 module "iam" {
@@ -21,11 +26,10 @@ module "security-group" {
 }
 
 module "launch-template" {
-  source                 = "./modules/launch-template"
-  instance_type          = var.instance_type
-  user_data_file         = var.user_data_file
-  vpc_security_group_ids = [module.security-group.webserver-security-group_id]
-  subnet_id              = module.vpc.subnet_az1_id
+  source             = "./modules/launch-template"
+  instance_type      = var.instance_type
+  user_data_file     = var.user_data_file
+  security_group_ids = [module.security-group.webserver-security-group_id]
 }
 
 module "target_group" {
@@ -42,7 +46,7 @@ module "alb" {
   source                 = "./modules/alb"
   project_name           = var.project_name
   alb_security_group_ids = [module.security-group.alb-security-group_id]
-  alb_subnet_ids         = [module.vpc.subnet_az1_id, module.vpc.subnet_az2_id]
+  alb_subnet_ids         = [module.vpc.public_subnet_az1_id, module.vpc.public_subnet_az2_id]
   target_group_arn       = module.target_group.target_group_arn
 }
 
@@ -50,6 +54,7 @@ module "asg" {
   source             = "./modules/asg"
   project_name       = var.project_name
   target_group_arn   = module.target_group.target_group_arn
+  subnet_ids         = [module.vpc.private_app_subnet_az1_id, module.vpc.private_app_subnet_az2_id]
   launch_template_id = module.launch-template.launch_template_id
   desired_capacity   = var.desired_capacity
   max_size           = var.max_size
@@ -66,6 +71,6 @@ module "rds_with_replica" {
   allocated_storage      = var.allocated_storage
   instance_class         = var.instance_class
   vpc_security_group_ids = [module.security-group.database-security-group_id]
-  subnet_ids             = [module.vpc.subnet_az1_id, module.vpc.subnet_az2_id]
+  subnet_ids             = [module.vpc.private_data_subnet_az1_id, module.vpc.private_data_subnet_az2_id]
   create_read_replica    = true # Set this to false if you don't want to create a read replica
 }
