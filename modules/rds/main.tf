@@ -32,6 +32,7 @@ resource "aws_db_instance" "read_replica" {
   engine                  = "mysql"
   engine_version          = "8.0"
   backup_retention_period = 7
+  skip_final_snapshot     = true
   instance_class          = var.instance_class
   allocated_storage       = var.allocated_storage
   username                = var.db_username
