@@ -9,8 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  build:
+    name: 'Build'
     runs-on: ubuntu-latest
     environment: production
 
@@ -36,10 +36,30 @@ jobs:
     - name: Terraform validate
       run: terraform validate
 
-    - name: Terraform Plan
-      run: terraform plan -input=false
+  test:
+    name: 'Test'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve -input=false
+      - run: echo Test
+
+  release:
+    name: 'Release'
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 17
+
+      - run: cp .github/.releaserc.yml .
+      - run: npm i -g semantic-release @semantic-release/changelog @semantic-release/git
+      - run: semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
